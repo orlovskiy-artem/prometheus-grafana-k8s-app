@@ -1,0 +1,65 @@
+{
+    "annotations": {
+      "list": []
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "your_prometheus_uid"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": []
+            },
+            "unit": "none"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "title": "Coin Flips",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "heads_counter",
+            "legendFormat": "Heads"
+          },
+          {
+            "expr": "tails_counter",
+            "legendFormat": "Tails"
+          },
+          {
+            "expr": "flip_coins_total",
+            "legendFormat": "Total Flips"
+          }
+        ]
+      }
+    ],
+    "refresh": "5s",
+    "schemaVersion": 38,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": []
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Coin Flip Metrics",
+    "version": 1
+}

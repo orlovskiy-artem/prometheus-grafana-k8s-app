@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgresql-deployment
+  labels:
+    app: postgresql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql
+  template:
+    metadata:
+      labels:
+        app: postgresql
+    spec:
+      containers:
+        - name: coin-flipping-postgresql
+          image: postgres:14-alpine
+          ports:
+            - containerPort: 5432
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "1024Mi"
+              cpu: "1000m"
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: coin-flipping-app-configmap
+                  key: postgres_database_name
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: coin-flipping-app-configmap
+                  key: postgres_database_host
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: coin-flipping-app-secret
+                  key: postgres_database_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: coin-flipping-app-secret
+                  key: postgres_database_password
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-storage
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: pvc-postgresql
+            

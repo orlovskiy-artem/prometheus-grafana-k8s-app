@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coin-flipping-app-configmap
+data:
+  postgres_database_name: coin_flipping_db
+  postgres_database_host: postgresql-service

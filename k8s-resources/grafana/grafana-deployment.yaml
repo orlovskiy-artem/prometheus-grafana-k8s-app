@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana-deployment
+  labels:
+    app: grafana-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana-app
+  template:
+    metadata:
+      labels:
+        app: grafana-app
+    spec:
+      containers:
+        - name: coin-flipping-grafana
+          image: grafana/grafana
+          ports: 
+            - containerPort: 3000
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "1024Mi"
+              cpu: "1000m"
+          volumeMounts:
+            - mountPath: /etc/grafana/provisioning/datasources/prometheus.yaml
+              name: grafana-datasources
+              subPath: prometheus.yaml
+            - mountPath: /etc/grafana/provisioning/dashboards/default.yaml
+              name: grafana-dashboards-provisioning
+              subPath: dashboards.yaml
+            - mountPath: /etc/grafana/dashboards/coin-metrics-simple.json
+              name: grafana-dashboards
+              subPath: coin-metrics-simple.json
+            - mountPath: /etc/grafana/dashboards/coin-metrics-detailed.json
+              name: grafana-dashboards
+              subPath: coin-metrics-detailed.json
+      volumes:
+        - name: grafana-datasources
+          configMap:
+            name: grafana-datasources
+        - name: grafana-dashboards-provisioning
+          configMap:
+            name: grafana-dashboards-provisioning
+        - name: grafana-dashboards
+          configMap:
+            name: grafana-dashboards

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-app-deployment
+  labels:
+    app: fastapi-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-app
+  template:
+    metadata:
+      labels:
+        app: fastapi-app
+    spec:
+      containers:
+        - name: coin-flipping-fastapi-app
+          image: artiseasy/coin-flipping-app
+          ports:
+            - containerPort: 8000
+            - containerPort: 5678
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          workingDir: /usr/src/app
+          env:
+            - name: PG_DATABASE_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: coin-flipping-app-configmap
+                  key: postgres_database_name
+            - name: PG_DATABASE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: coin-flipping-app-configmap
+                  key: postgres_database_host
+            - name: PG_DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: coin-flipping-app-secret
+                  key: postgres_database_user
+            - name: PG_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: coin-flipping-app-secret
+                  key: postgres_database_password
+      restartPolicy: Always
+            
